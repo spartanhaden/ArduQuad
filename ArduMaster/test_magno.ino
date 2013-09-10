@@ -1,4 +1,3 @@
-#include <Wire.h>
 #define MAG_ADDR  0x0E
 int axis[3], min[3], max[3];
 
@@ -10,13 +9,6 @@ int axis[3], min[3], max[3];
 //x = -1152.5
 //y = 140
 //z = -833
-
-void setup(){
-  Wire.begin();
-  Serial.begin(9600);
-  initMag();
-}
-
 void loop(){
   updateAxes();
   setMaxes();
@@ -25,8 +17,8 @@ void loop(){
 }
 
 void initMag(){
-  writeByte(0x11, 0x80);  // cntrl register2 send 0x80, enable auto resets
-  writeByte(0x10, 0x01);  // cntrl register1 send 0x01, active mode
+  writeByte(MAG_ADDR, 0x11, 0x80);  // cntrl register2 send 0x80, enable auto resets
+  writeByte(MAG_ADDR, 0x10, 0x01);  // cntrl register1 send 0x01, active mode
   updateAxes();
   for(byte i = 0; i < 3; i++){
     min[i] = axis[i];
@@ -80,29 +72,10 @@ void updateAxes(){
 }
 
 int readAxis(byte MSB_REG){
-  return (readByte(MSB_REG + 1)|(readByte(MSB_REG) << 8));  //concatenate the MSB and LSB to the total value
+  return (readByte(MAG_ADDR, MSB_REG + 1)|(readByte(MAG_ADDR, MSB_REG) << 8));  //concatenate the MSB and LSB to the total value
 }
 
 void writeOffset(byte MSB_REG, int val){
-  writeByte(MSB_REG, highByte(val));     //MSB
-  writeByte(MSB_REG + 1, lowByte(val));  //LSB
-}
-
-byte readByte(byte reg){
-  byte bite;
-  Wire.beginTransmission(MAG_ADDR);
-  Wire.write(reg);
-  Wire.endTransmission();
-  Wire.beginTransmission(MAG_ADDR);
-  Wire.requestFrom(MAG_ADDR, 1);
-  while(Wire.available())
-    bite = Wire.read();
-  return bite;
-}
-
-void writeByte(byte reg, byte val){
-  Wire.beginTransmission(MAG_ADDR);
-  Wire.write(reg);
-  Wire.write(val);
-  Wire.endTransmission();
+  writeByte(MAG_ADDR, MSB_REG, highByte(val));     //MSB
+  writeByte(MAG_ADDR, MSB_REG + 1, lowByte(val));  //LSB
 }
