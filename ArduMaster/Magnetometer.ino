@@ -9,13 +9,6 @@ int axis[3], min[3], max[3];
 //x = -1152.5
 //y = 140
 //z = -833
-void loop(){
-  updateAxes();
-  setMaxes();
-  printVals();
-  //printMaxes();
-}
-
 void initMag(){
   writeByte(MAG_ADDR, 0x11, 0x80);  // cntrl register2 send 0x80, enable auto resets
   writeByte(MAG_ADDR, 0x10, 0x01);  // cntrl register1 send 0x01, active mode
@@ -29,6 +22,13 @@ void initMag(){
   writeOffset(0X0D, -833);  //Z offset
 }
 
+void Magnoloop(){
+  updateAxes();
+  setMaxes();
+  printMagnoVals();
+  //printMaxes();
+}
+
 void setMaxes(){
   for(byte i = 0; i < 3; i++)
     if(axis[i] < min[i])
@@ -37,7 +37,7 @@ void setMaxes(){
       max[i] = axis[i];
 }
 
-void printVals(void){
+void printMagnoVals(void){
   Serial.print("x ");
   Serial.print(180 * atan2(axis[1], axis[0]) / PI);
   Serial.print("    y ");
