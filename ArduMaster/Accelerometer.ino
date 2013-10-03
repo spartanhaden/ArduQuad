@@ -9,11 +9,12 @@ void initAccel(){
   delay(5);
 }
 
-void Accelloop(){
+void AccelLoop(){
   printAccelVals();
   delay(5);
 }
 
 void printAccelVals(){
   Serial.println(readByte(ACCEL_ADDR, 0x75));
+  Serial.println(readByte(ACCEL_ADDR, 60)|(readByte(ACCEL_ADDR, 59) << 8));
 }

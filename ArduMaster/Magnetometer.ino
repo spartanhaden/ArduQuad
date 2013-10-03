@@ -22,7 +22,7 @@ void initMag(){
   writeOffset(0X0D, -833);  //Z offset
 }
 
-void Magnoloop(){
+void MagnoLoop(){
   updateAxes();
   setMaxes();
   printMagnoVals();

@@ -7,12 +7,14 @@ void setup(){
   Wire.begin();
   Serial.begin(9600);
   //initMag();
-  initAccel();
-  //initMotors();
+  //initAccel();
+  initMotors();
 }
 
 void loop(){
-  Accelloop();
+  motorLoop();
+  //AccelLoop();
+  //MagnoLoop();
 }
 
 byte readByte(int DEV_ADDR, byte REG){
