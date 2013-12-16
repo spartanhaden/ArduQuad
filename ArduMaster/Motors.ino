@@ -24,10 +24,10 @@ void initMotors(){
 }
 
 void motorLoop(){
-  setAllMotors(1500);
-  delay(100);
-  setAllMotors(1000);
+  setAllMotors(1700);
   delay(1000);
+  setAllMotors(1000);
+  delay(5000);
 }
 
 void setAllMotors(int speed){
