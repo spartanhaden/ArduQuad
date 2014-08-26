@@ -23,7 +23,7 @@ void initMotors(){
   setAllMotors(1000);
 }
 
-void motorLoop(){
+void MotorLoop(){
   setAllMotors(1700);
   delay(1000);
   setAllMotors(1000);
