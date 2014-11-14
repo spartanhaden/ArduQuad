@@ -1,4 +1,5 @@
 #define MAG_ADDR	0x0E
+
 int axis[3], min[3], max[3];
 
 //minX: -1792    maxX: -513    minY: -436    maxY: 716    minZ: -1360    maxZ: -306

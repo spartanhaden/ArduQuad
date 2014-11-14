@@ -1,11 +1,10 @@
-//Quadrotor
+#include "Servo.h"
+#include "utility/twi.h"
+#include "Wire.h"
 
-#include <Servo.h>
-#include <Wire.h>
-
-Servo motor;
-String line = "";
-boolean endLine = false;
+//Servo motor;
+//String line = "";
+//boolean endLine = false;
 
 void setup(){
 	//Wire.begin();
