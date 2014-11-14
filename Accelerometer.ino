@@ -1,5 +1,3 @@
-#define ACCEL_ADDR	0x68
-
 int x = 0;
 int y = 0;
 

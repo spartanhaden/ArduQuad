@@ -1,6 +1,8 @@
 #include "Servo.h"
 #include "utility/twi.h"
 #include "Wire.h"
+#define ACCEL_ADDR	0x68
+#define MAG_ADDR	0x0E
 
 //Servo motor;
 //String line = "";
@@ -30,7 +32,7 @@ byte readByte(int DEV_ADDR, byte REG){
 	Wire.beginTransmission(DEV_ADDR);
 	Wire.requestFrom(DEV_ADDR, 1);
 	while(Wire.available())
-		Byte = Wire.read();
+	Byte = Wire.read();
 	return Byte;
 }
 

@@ -1,5 +1,3 @@
-#define MAG_ADDR	0x0E
-
 int axis[3], min[3], max[3];
 
 //minX: -1792    maxX: -513    minY: -436    maxY: 716    minZ: -1360    maxZ: -306
@@ -11,8 +9,8 @@ int axis[3], min[3], max[3];
 //y = 140
 //z = -833
 void initMag(){
-	writeByte(MAG_ADDR, 0x11, 0x80);	// cntrl register2 send 0x80, enable auto resets
-	writeByte(MAG_ADDR, 0x10, 0x01);	// cntrl register1 send 0x01, active mode
+	writeByte(MAG_ADDR, 0x11, 0x80);	// control register2 send 0x80, enable auto resets
+	writeByte(MAG_ADDR, 0x10, 0x01);	// control register1 send 0x01, active mode
 	updateAxes();
 	for(byte i = 0; i < 3; i++){
 		min[i] = axis[i];
