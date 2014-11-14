@@ -1,6 +1,7 @@
 #include "Servo.h"
 #include "utility/twi.h"
 #include "Wire.h"
+
 #define ACCEL_ADDR	0x68
 #define MAG_ADDR	0x0E
 

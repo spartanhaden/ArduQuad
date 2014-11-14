@@ -30,10 +30,10 @@ void MagnoLoop(){
 
 void setMaxes(){
 	for(byte i = 0; i < 3; i++)
-		if(axis[i] < min[i])
-			min[i] = axis[i];
-		else if(axis[i] > max[i])
-			max[i] = axis[i];
+	if(axis[i] < min[i])
+	min[i] = axis[i];
+	else if(axis[i] > max[i])
+	max[i] = axis[i];
 }
 
 void printMagnoVals(void){
@@ -75,6 +75,6 @@ int readAxis(byte MSB_REG){
 }
 
 void writeOffset(byte MSB_REG, int val){
-	writeByte(MAG_ADDR, MSB_REG, highByte(val));		//MSB
+	writeByte(MAG_ADDR, MSB_REG, highByte(val));	//MSB
 	writeByte(MAG_ADDR, MSB_REG + 1, lowByte(val));	//LSB
 }
