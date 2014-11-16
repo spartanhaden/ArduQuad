@@ -10,27 +10,26 @@
 //boolean endLine = false;
 
 void setup(){
-	//Wire.begin();
+	Wire.begin();
 	Serial.begin(9600);
+	initAccel();
 	//initMag();
-	//initAccel();
 	//initMotors();
-	//motor.attach(44);
 }
 
 void loop(){
-	//MotorLoop();
-	//AccelLoop();
-	//MagnoLoop();
 	Serial.println("hello");
+	AccelLoop();
+	//MagnoLoop();
+	//MotorLoop();
 }
 
 byte readByte(int DEV_ADDR, byte REG){
 	byte Byte;
 	Wire.beginTransmission(DEV_ADDR);
 	Wire.write(REG);
-	Wire.endTransmission();
-	Wire.beginTransmission(DEV_ADDR);
+	Wire.endTransmission();				//skip this line?
+	Wire.beginTransmission(DEV_ADDR);	//skip this line?
 	Wire.requestFrom(DEV_ADDR, 1);
 	while(Wire.available())
 	Byte = Wire.read();
