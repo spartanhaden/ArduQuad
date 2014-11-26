@@ -1,11 +1,12 @@
 void initAccel(){
-	writeByte(MPU_ADDR, PWR_MGMT_1, 0x80);	//PWR_MGMT_1 send 0x80, reset device
+	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	//PWR_MGMT_1 send 128, reset device
 	delay(5);
-	writeByte(MPU_ADDR, PWR_MGMT_1, 0x00);	//PWR_MGMT_1 send 0x00, active mode
+	writeByte(MPU_ADDR, PWR_MGMT_1, 1);		//PWR_MGMT_1 send 1, set clock source to X axis gyroscope and set sensor active
 	delay(5);
 }
 
 void AccelLoop(){
+	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initAccel();
 	printAccelVals();
 }
 

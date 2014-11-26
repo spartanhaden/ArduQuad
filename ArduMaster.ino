@@ -2,30 +2,30 @@
 #include "utility/twi.h"
 #include "Wire.h"
 
-#define MPU_ADDR		0x68
-#define MAG_ADDR		0x0E
+#define MPU_ADDR		104
+#define MAG_ADDR		14
 
 //Define Registers
-#define WHO_AM_I		0x75
-#define PWR_MGMT_1		0x6B
-#define PWR_MGMT_2		0x6C
+#define WHO_AM_I		117
+#define PWR_MGMT_1		107
+#define PWR_MGMT_2		108
 //Define ACCEL Registers
-#define ACCEL_XOUT_H	0x3B
-#define ACCEL_XOUT_L	0x3C
-#define ACCEL_YOUT_H	0x3D
-#define ACCEL_YOUT_L	0x3E
-#define ACCEL_ZOUT_H	0x3F
-#define ACCEL_ZOUT_L	0x40
+#define ACCEL_XOUT_H	59
+#define ACCEL_XOUT_L	60
+#define ACCEL_YOUT_H	61
+#define ACCEL_YOUT_L	62
+#define ACCEL_ZOUT_H	63
+#define ACCEL_ZOUT_L	64
 //Define TEMP Registers
-#define TEMP_OUT_H		0x41
-#define TEMP_OUT_L		0x42
+#define TEMP_OUT_H		65
+#define TEMP_OUT_L		66
 //Define GYRO Registers
-#define GYRO_XOUT_H		0x43
-#define GYRO_XOUT_L		0x44
-#define GYRO_YOUT_H		0x45
-#define GYRO_YOUT_L		0x46
-#define GYRO_ZOUT_H		0x47
-#define GYRO_ZOUT_L		0x48
+#define GYRO_XOUT_H		67
+#define GYRO_XOUT_L		68
+#define GYRO_YOUT_H		69
+#define GYRO_YOUT_L		70
+#define GYRO_ZOUT_H		71
+#define GYRO_ZOUT_L		72
 
 //Servo motor;
 
