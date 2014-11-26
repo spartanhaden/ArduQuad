@@ -1,19 +1,26 @@
-int x = 0;
-int y = 0;
-
 void initAccel(){
-	writeByte(ACCEL_ADDR, 0x6B, 0x80);  // PWR_MGT_1 send 0x80, reset device
+	writeByte(MPU_ADDR, PWR_MGMT_1, 0x80);	//PWR_MGMT_1 send 0x80, reset device
 	delay(5);
-	writeByte(ACCEL_ADDR, 0x6B, 0x00);  // PWR_MGT_1 send 0x00, active mode
+	writeByte(MPU_ADDR, PWR_MGMT_1, 0x00);	//PWR_MGMT_1 send 0x00, active mode
 	delay(5);
 }
 
 void AccelLoop(){
 	printAccelVals();
-	delay(5);
 }
 
 void printAccelVals(){
-	Serial.println(readByte(ACCEL_ADDR, 0x75));
-	Serial.println(readByte(ACCEL_ADDR, 60)|(readByte(ACCEL_ADDR, 59) << 8));
+	Serial.print("ACEL X: ");
+	Serial.print(readByte(MPU_ADDR, ACCEL_XOUT_L)|(readByte(MPU_ADDR, ACCEL_XOUT_H) << 8));
+	Serial.print("\tACEL Y: ");
+	Serial.print(readByte(MPU_ADDR, ACCEL_YOUT_L)|(readByte(MPU_ADDR, ACCEL_YOUT_H) << 8));
+	Serial.print("\tACEL Z: ");
+	Serial.println(readByte(MPU_ADDR, ACCEL_ZOUT_L)|(readByte(MPU_ADDR, ACCEL_ZOUT_H) << 8));
+	Serial.print("GYRO X: ");
+	Serial.print(readByte(MPU_ADDR, GYRO_XOUT_L)|(readByte(MPU_ADDR, GYRO_XOUT_H) << 8));
+	Serial.print("\tGYRO Y: ");
+	Serial.print(readByte(MPU_ADDR, GYRO_YOUT_L)|(readByte(MPU_ADDR, GYRO_YOUT_H) << 8));
+	Serial.print("\tGYRO Z: ");
+	Serial.println(readByte(MPU_ADDR, GYRO_ZOUT_L)|(readByte(MPU_ADDR, GYRO_ZOUT_H) << 8));
+	Serial.println();
 }
