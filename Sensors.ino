@@ -1,4 +1,4 @@
-int accel[3]
+int accel[3];
 int gyro[3];
 int mag[3];
 int temp;
@@ -35,6 +35,8 @@ void printSensorValues(){
 	//Serial.print(mag[1]);
 	//Serial.print("\tM Z: ");
 	//Serial.println(mag[2]);
+	Serial.print("T: ");
+	Serial.println(temp);
 	Serial.println();
 }
 
@@ -48,6 +50,7 @@ void updateSensors(){
 	//mag[0] = readSensor(MPU_ADDR);
 	//mag[1] = readSensor(MPU_ADDR);
 	//mag[2] = readSensor(MPU_ADDR);
+	temp = readSensor(MPU_ADDR, TEMP_OUT_L, TEMP_OUT_H);
 }
 
 int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){
