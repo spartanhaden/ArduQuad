@@ -30,15 +30,13 @@
 void setup(){
 	Wire.begin();
 	Serial.begin(9600);
-	initAccel();
-	initMag();
+	initSensors();
 	//initMotors();
 }
 
 void loop(){
 	delay(500);
-	AccelLoop();
-	MagnoLoop();
+	sensorLoop();
 	//MotorLoop();
 }
 
@@ -51,10 +49,6 @@ byte readByte(int DEV_ADDR, byte REG){
 	while(Wire.available())
 	Byte = Wire.read();
 	return Byte;
-}
-
-int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){
-	return (int)((readByte(DEV_ADDR, REG_H) << 8) + readByte(DEV_ADDR, REG_L));
 }
 
 void writeByte(byte DEV_ADDR, byte REG, byte VAL){
