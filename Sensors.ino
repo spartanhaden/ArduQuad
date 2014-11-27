@@ -2,6 +2,8 @@ int accel[3];
 int gyro[3];
 int mag[3];
 int temp;
+float tempInC;
+float tempInF;
 
 void initSensors(){
 	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	//PWR_MGMT_1 send 128, reset device
@@ -36,7 +38,10 @@ void printSensorValues(){
 	//Serial.print("\tM Z: ");
 	//Serial.println(mag[2]);
 	Serial.print("T: ");
-	Serial.println(temp);
+	Serial.print(tempInC);
+	Serial.print(" C\t");
+	Serial.print(tempInF);
+	Serial.println(" F");
 	Serial.println();
 }
 
@@ -51,6 +56,8 @@ void updateSensors(){
 	//mag[1] = readSensor(MPU_ADDR);
 	//mag[2] = readSensor(MPU_ADDR);
 	temp = readSensor(MPU_ADDR, TEMP_OUT_L, TEMP_OUT_H);
+	tempInC = (((float)temp)/340 + 35);
+	tempInF = tempInC * 1.8 + 32;
 }
 
 int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){
