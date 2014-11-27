@@ -3,7 +3,7 @@
 #include "Wire.h"
 
 #define MPU_ADDR		104
-#define MAG_ADDR		14
+#define MAG_ADDR		12
 
 //Define Registers
 #define WHO_AM_I		117
@@ -27,20 +27,18 @@
 #define GYRO_ZOUT_H		71
 #define GYRO_ZOUT_L		72
 
-//Servo motor;
-
 void setup(){
 	Wire.begin();
 	Serial.begin(9600);
 	initAccel();
-	//initMag();
+	initMag();
 	//initMotors();
 }
 
 void loop(){
 	delay(500);
 	AccelLoop();
-	//MagnoLoop();
+	MagnoLoop();
 	//MotorLoop();
 }
 
@@ -53,6 +51,10 @@ byte readByte(int DEV_ADDR, byte REG){
 	while(Wire.available())
 	Byte = Wire.read();
 	return Byte;
+}
+
+int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){
+	return (int)((readByte(DEV_ADDR, REG_H) << 8) + readByte(DEV_ADDR, REG_L));
 }
 
 void writeByte(byte DEV_ADDR, byte REG, byte VAL){

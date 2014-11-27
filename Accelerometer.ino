@@ -25,7 +25,3 @@ void printAccelVals(){
 	Serial.println(readSensor(MPU_ADDR, GYRO_ZOUT_L, GYRO_ZOUT_H));
 	Serial.println();
 }
-
-int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){
-	return (int)((readByte(DEV_ADDR, REG_H) << 8) + readByte(DEV_ADDR, REG_L));
-}
