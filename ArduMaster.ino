@@ -49,7 +49,12 @@
 void setup(){
 	Wire.begin();
 	Serial.begin(9600);
-	initSensors();
+	if(!initSensors()){
+		while(1){
+			delay(500);
+			Serial.println("error");
+		}
+	}
 	//initMotors();
 }
 

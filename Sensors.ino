@@ -5,20 +5,27 @@ int temp;
 float tempInC;
 float tempInF;
 
-void initSensors(){
+boolean initSensors(){
+	boolean stable = true;
 	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	//PWR_MGMT_1 send 128, reset device
 	delay(100);
 	writeByte(MPU_ADDR, PWR_MGMT_1, 1);		//PWR_MGMT_1 send 1, set clock source to X axis gyroscope and set sensor active
 	delay(200);
-	writeByte(MPU_ADDR, INT_PIN_CFG, 2);
-	delay(50);
+	writeByte(MPU_ADDR, INT_PIN_CFG, 2);	//Enable I2C passthrough
+	delay(5);
+	if(readByte(MPU_ADDR, WHO_AM_I) != 104){
+	    return false;
+	}else if(readByte(MAG_ADDR, MAG_INFO) != 72){
+	    return false;
+	}else if(!magSelfTest()){
+	    return false;
+	}
 }
 
 void sensorLoop(){
-	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();
-	Serial.println(readByte(MAG_ADDR, MAG_INFO));	//72
-	//updateSensors();
-	//printSensorValues();
+	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	//Checks for disconnection of Sensor
+	updateSensors();
+	printSensorValues();
 }
 
 boolean magSelfTest(){
@@ -60,12 +67,12 @@ void printSensorValues(){
 	Serial.print(gyro[1]);
 	Serial.print("\tG Z: ");
 	Serial.println(gyro[2]);
-	//Serial.print("M X: ");
-	//Serial.print(mag[0]);
-	//Serial.print("\tM Y: ");
-	//Serial.print(mag[1]);
-	//Serial.print("\tM Z: ");
-	//Serial.println(mag[2]);
+	Serial.print("M X: ");
+	Serial.print(mag[0]);
+	Serial.print("\tM Y: ");
+	Serial.print(mag[1]);
+	Serial.print("\tM Z: ");
+	Serial.println(mag[2]);
 	Serial.print("T: ");
 	Serial.print(tempInC);
 	Serial.print(" C\t");
@@ -75,15 +82,17 @@ void printSensorValues(){
 }
 
 void updateSensors(){
+	writeByte(MAG_ADDR, MAG_CONTROL, 1);
 	accel[0] = readSensor(MPU_ADDR, ACCEL_XOUT_L, ACCEL_XOUT_H);
 	accel[1] = readSensor(MPU_ADDR, ACCEL_YOUT_L, ACCEL_YOUT_H);
 	accel[2] = readSensor(MPU_ADDR, ACCEL_ZOUT_L, ACCEL_ZOUT_H);
 	gyro[0] = readSensor(MPU_ADDR, GYRO_XOUT_L, GYRO_XOUT_H);
 	gyro[1] = readSensor(MPU_ADDR, GYRO_YOUT_L, GYRO_YOUT_H);
 	gyro[2] = readSensor(MPU_ADDR, GYRO_ZOUT_L, GYRO_ZOUT_H);
-	//mag[0] = readSensor(MPU_ADDR);
-	//mag[1] = readSensor(MPU_ADDR);
-	//mag[2] = readSensor(MPU_ADDR);
+	delay(9);
+	mag[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);
+	mag[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);
+	mag[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);
 	temp = readSensor(MPU_ADDR, TEMP_OUT_L, TEMP_OUT_H);
 	tempInC = (((float)temp)/340 + 35);
 	tempInF = tempInC * 1.8 + 32;
