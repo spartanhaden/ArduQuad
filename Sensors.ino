@@ -7,13 +7,16 @@ float tempInF;
 
 void initSensors(){
 	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	//PWR_MGMT_1 send 128, reset device
-	delay(5);
+	delay(100);
 	writeByte(MPU_ADDR, PWR_MGMT_1, 1);		//PWR_MGMT_1 send 1, set clock source to X axis gyroscope and set sensor active
-	delay(5);
+	delay(200);
+	writeByte(MPU_ADDR, INT_PIN_CFG, 2);
+	delay(50);
 }
 
 void sensorLoop(){
 	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();
+	Serial.println(readByte(MAG_ADDR, 0));	//72
 	updateSensors();
 	printSensorValues();
 }

@@ -6,9 +6,11 @@
 #define MAG_ADDR		12
 
 //Define Registers
-#define WHO_AM_I		117
+#define INT_PIN_CFG		55
+#define USER_CTRL		106
 #define PWR_MGMT_1		107
 #define PWR_MGMT_2		108
+#define WHO_AM_I		117
 //Define ACCEL Registers
 #define ACCEL_XOUT_H	59
 #define ACCEL_XOUT_L	60
