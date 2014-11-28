@@ -16,9 +16,28 @@ void initSensors(){
 
 void sensorLoop(){
 	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();
-	Serial.println(readByte(MAG_ADDR, 0));	//72
-	updateSensors();
-	printSensorValues();
+	Serial.println(readByte(MAG_ADDR, MAG_INFO));	//72
+	//updateSensors();
+	//printSensorValues();
+}
+
+boolean magSelfTest(){
+	int magSelfTest;
+	boolean testPassed = true;
+	writeByte(MAG_ADDR, MAG_CONTROL, 0);	//Set Power-down mode
+	writeByte(MAG_ADDR, MAG_SELF_TEST, 64);	//Write “1” to SELF bit of self-test register
+	writeByte(MAG_ADDR, MAG_CONTROL, 8);	//Set Self-test Mode
+	delay(1);
+
+	magSelfTest = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);				//Get X self-test value
+	if(magSelfTest < -100 || magSelfTest > 100) testPassed = false;			//Test X self-test value
+	magSelfTest = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);				//Get Y self-test value
+	else if(magSelfTest < -100 || magSelfTest > 100) testPassed = false;	//Test Y self-test value
+	magSelfTest = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);				//Get Z self-test value
+	else if(magSelfTest < -1000 || magSelfTest > -300) testPassed = false;	//Test Z self-test value
+
+	writeByte(MAG_ADDR, MAG_SELF_TEST, 0);	//Write “0” to SELF bit of self-test register
+	return testPassed;
 }
 
 void printSensorValues(){

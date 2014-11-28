@@ -5,6 +5,23 @@
 #define MPU_ADDR		104
 #define MAG_ADDR		12
 
+//Definde MAG Registers
+#define MAG_WHO_AM_I	0x00	//Returns 0x48
+#define MAG_INFO		0x01	//Does Nothing?
+#define MAG_STATUS_1	0x02	//Val of 1 = ready, 0 = normal, Data ready status bit 0
+#define MAG_XOUT_L		0x03
+#define MAG_XOUT_H		0x04
+#define MAG_YOUT_L		0x05
+#define MAG_YOUT_H		0x06
+#define MAG_ZOUT_L		0x07
+#define MAG_ZOUT_H		0x08
+#define MAG_STATUS_2	0x09	//Val of 1 = error, 0 = normal, magnetic sensor overflow bit 3 and data read error bit 2
+#define MAG_CONTROL		0x0A	//Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
+#define MAG_SELF_TEST	0x0C	//Write 1 to enable self test on bit 6
+#define MAG_SENS_ADJ_X	0x01	//Fuse ROM X-axis sensitivity adjustment value
+#define MAG_SENS_ADJ_Y	0x11	//Fuse ROM Y-axis sensitivity adjustment value
+#define MAG_SENS_ADJ_Z	0x12	//Fuse ROM Z-axis sensitivity adjustment value
+
 //Define Registers
 #define INT_PIN_CFG		55
 #define USER_CTRL		106
