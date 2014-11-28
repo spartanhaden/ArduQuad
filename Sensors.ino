@@ -29,6 +29,9 @@ boolean magSelfTest(){
 	writeByte(MAG_ADDR, MAG_CONTROL, 8);	//Set Self-test Mode
 	delay(1);
 
+	if(!magDataReady()){
+		testPassed = false;					//Check Data Ready
+
 	magSelfTest = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);				//Get X self-test value
 	if(magSelfTest < -100 || magSelfTest > 100) testPassed = false;			//Test X self-test value
 	magSelfTest = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);				//Get Y self-test value
@@ -38,6 +41,10 @@ boolean magSelfTest(){
 
 	writeByte(MAG_ADDR, MAG_SELF_TEST, 0);	//Write “0” to SELF bit of self-test register
 	return testPassed;
+}
+
+boolean magDataReady(){
+	return readByte(MAG_ADDR, MAG_STATUS_1) == 1;
 }
 
 void printSensorValues(){
