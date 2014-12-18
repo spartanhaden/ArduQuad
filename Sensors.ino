@@ -96,8 +96,6 @@ void updateSensors(){
 		}
 		delayMicroseconds(100);
 	}
-	Serial.println(readByte(MAG_ADDR, MAG_XOUT_L));
-	Serial.println(readByte(MAG_ADDR, MAG_XOUT_H));
 	mag[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);
 	mag[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);
 	mag[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);
@@ -107,5 +105,5 @@ void updateSensors(){
 }
 
 int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){
-	return (int)((readByte(DEV_ADDR, REG_H) << 8) + readByte(DEV_ADDR, REG_L));
+	return ((int16_t)readByte(DEV_ADDR, REG_H) << 8) | readByte(DEV_ADDR, REG_L);
 }

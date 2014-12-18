@@ -49,11 +49,9 @@
 void setup(){
 	Wire.begin();
 	Serial.begin(9600);
-	if(!initSensors()){
-		while(1){
-			delay(500);
-			Serial.println("error");
-		}
+	while(!initSensors()){
+		delay(500);
+		Serial.println("Error initializing the sensors.");
 	}
 	//initMotors();
 }
