@@ -21,7 +21,8 @@ boolean initSensors(){
 void sensorLoop(){
 	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	//Checks for disconnection of Sensor
 	updateSensors();
-	printSensorValues();
+	//printSensorValues();
+	printSensorForProcessing();
 }
 
 boolean magSelfTest(){
@@ -54,13 +55,21 @@ boolean magDataReady(){
 	return readByte(MAG_ADDR, MAG_STATUS_1) == 1;
 }
 
+void printSensorForProcessing(){
+	Serial.print(float(accel[0])/16384);
+	Serial.print(",");
+	Serial.print(float(accel[1])/16384);
+	Serial.print(",");
+	Serial.println(float(accel[2])/16384);
+}
+
 void printSensorValues(){
 	Serial.print("A X: ");
-	Serial.print(accel[0]);
+	Serial.print(float(accel[0])/16384);
 	Serial.print("\tA Y: ");
-	Serial.print(accel[1]);
+	Serial.print(float(accel[1])/16384);
 	Serial.print("\tA Z: ");
-	Serial.println(accel[2]);
+	Serial.println(float(accel[2])/16384);
 	Serial.print("G X: ");
 	Serial.print(gyro[0]);
 	Serial.print("\tG Y: ");
