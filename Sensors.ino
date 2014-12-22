@@ -98,9 +98,10 @@ void updateSensors(){
 	gyro[0] = readSensor(MPU_ADDR, GYRO_XOUT_L, GYRO_XOUT_H);
 	gyro[1] = readSensor(MPU_ADDR, GYRO_YOUT_L, GYRO_YOUT_H);
 	gyro[2] = readSensor(MPU_ADDR, GYRO_ZOUT_L, GYRO_ZOUT_H);
-	delay(10);
-	for(int i = 0; i < 100; i++){	//Waits 10 ms for the Magnetometer data to become available
+	//delay(10);
+	for(int i = 0; i < 100; i++){	//Waits 10 ms for the Magnetometer data to become available should take 0.3 ms
 		if(magDataReady()){
+			Serial.println(i);
 			break;
 		}
 		delayMicroseconds(100);
