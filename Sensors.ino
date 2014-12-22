@@ -101,7 +101,6 @@ void updateSensors(){
 	//delay(10);
 	for(int i = 0; i < 100; i++){	//Waits 10 ms for the Magnetometer data to become available should take 0.3 ms
 		if(magDataReady()){
-			Serial.println(i);
 			break;
 		}
 		delayMicroseconds(100);
