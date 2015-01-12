@@ -1,25 +1,25 @@
-int accel[3];
-int gyro[3];
-int mag[3];
-int temp;
-float tempInC;
-float tempInF;
+int accel[3];	// Accelerometer
+int gyro[3];	// Gyroscope
+int mag[3];		// Magnetometer
+int temp;		// Raw Temperature sensor value
+float tempInC;	// Temperature data in Celsius
+float tempInF;	// Temperature data in Fahrenheit
 
-boolean initSensors(){
-	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	//PWR_MGMT_1 send 128, reset device
+boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerometer. Returns false if initialization fails
+	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	// PWR_MGMT_1 send 128, reset device
 	delay(100);
-	writeByte(MPU_ADDR, PWR_MGMT_1, 1);		//PWR_MGMT_1 send 1, set clock source to X axis gyroscope and set sensor active
+	writeByte(MPU_ADDR, PWR_MGMT_1, 1);		// PWR_MGMT_1 send 1, set clock source to X axis gyroscope and set sensor active
 	delay(200);
-	writeByte(MPU_ADDR, INT_PIN_CFG, 2);	//Enable I2C passthrough
+	writeByte(MPU_ADDR, INT_PIN_CFG, 2);	// Enable I2C pass through
 	delay(5);
-	if(readByte(MPU_ADDR, WHO_AM_I) != 104) return false;
-	else if(readByte(MAG_ADDR, MAG_WHO_AM_I) != 72) return false;
-	else if(!magSelfTest()) return false;
+	if(readByte(MPU_ADDR, WHO_AM_I) != 104)			return false;
+	else if(readByte(MAG_ADDR, MAG_WHO_AM_I) != 72)	return false;
+	else if(!magSelfTest())							return false;
 	return true;
 }
 
 void sensorLoop(){
-	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	//Checks for disconnection of Sensor
+	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	// Checks for disconnection of Sensor
 	updateSensors();
 	//printSensorValues();
 	printSensorForProcessing();
@@ -51,38 +51,39 @@ boolean magSelfTest(){
 	return testPassed;
 }
 
-boolean magDataReady(){
+boolean magDataReady(){	// Checks if the Magnetometer data is ready
 	return readByte(MAG_ADDR, MAG_STATUS_1) == 1;
 }
 
-void printSensorForProcessing(){
-	Serial.print(float(accel[0])/16384);
+void printSensorForProcessing(){	// Prints sensor info for use with a processing sketch I have made
+	Serial.print(accel[0]);
 	Serial.print(",");
-	Serial.print(float(accel[1])/16384);
+	Serial.print(accel[1]);
 	Serial.print(",");
-	Serial.println(float(accel[2])/16384);
+	Serial.print(accel[2]);
+	Serial.print("n");
 }
 
-void printSensorValues(){
-	Serial.print("A X: ");
+void printSensorValues(){	// Prints human readable sensor information
+	Serial.print("Accelerometer X: ");
 	Serial.print(float(accel[0])/16384);
-	Serial.print("\tA Y: ");
+	Serial.print("\tY: ");
 	Serial.print(float(accel[1])/16384);
-	Serial.print("\tA Z: ");
+	Serial.print("\tZ: ");
 	Serial.println(float(accel[2])/16384);
-	Serial.print("G X: ");
+	Serial.print("Gyroscope X: ");
 	Serial.print(gyro[0]);
-	Serial.print("\tG Y: ");
+	Serial.print("\tY: ");
 	Serial.print(gyro[1]);
-	Serial.print("\tG Z: ");
+	Serial.print("\tZ: ");
 	Serial.println(gyro[2]);
-	Serial.print("M X: ");
+	Serial.print("Magnetometer X: ");
 	Serial.print(mag[0]);
-	Serial.print("\tM Y: ");
+	Serial.print("\tY: ");
 	Serial.print(mag[1]);
-	Serial.print("\tM Z: ");
+	Serial.print("\tZ: ");
 	Serial.println(mag[2]);
-	Serial.print("T: ");
+	Serial.print("Temperature: ");
 	Serial.print(tempInC);
 	Serial.print(" C\t");
 	Serial.print(tempInF);
@@ -90,7 +91,7 @@ void printSensorValues(){
 	Serial.println();
 }
 
-void updateSensors(){
+void updateSensors(){	// Takes readings from the sensors
 	writeByte(MAG_ADDR, MAG_CONTROL, 1);
 	accel[0] = readSensor(MPU_ADDR, ACCEL_XOUT_L, ACCEL_XOUT_H);
 	accel[1] = readSensor(MPU_ADDR, ACCEL_YOUT_L, ACCEL_YOUT_H);
@@ -98,21 +99,20 @@ void updateSensors(){
 	gyro[0] = readSensor(MPU_ADDR, GYRO_XOUT_L, GYRO_XOUT_H);
 	gyro[1] = readSensor(MPU_ADDR, GYRO_YOUT_L, GYRO_YOUT_H);
 	gyro[2] = readSensor(MPU_ADDR, GYRO_ZOUT_L, GYRO_ZOUT_H);
-	//delay(10);
-	for(int i = 0; i < 100; i++){	//Waits 10 ms for the Magnetometer data to become available should take 0.3 ms
+	for(int i = 0; i < 100; i++){	// Waits up to 10 ms for the Magnetometer data to become available should take 0.3 ms
 		if(magDataReady()){
+			mag[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);
+			mag[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);
+			mag[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);
 			break;
 		}
 		delayMicroseconds(100);
 	}
-	mag[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);
-	mag[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);
-	mag[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);
 	temp = readSensor(MPU_ADDR, TEMP_OUT_L, TEMP_OUT_H);
 	tempInC = (((float)temp)/340 + 35);
 	tempInF = tempInC * 1.8 + 32;
 }
 
-int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){
+int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){	// Reads a sensors LSB and HSB and returns a combined 16-bit signed int
 	return ((int16_t)readByte(DEV_ADDR, REG_H) << 8) | readByte(DEV_ADDR, REG_L);
 }
