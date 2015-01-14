@@ -1,9 +1,16 @@
-int accel[3];	// Accelerometer
-int gyro[3];	// Gyroscope
-int mag[3];		// Magnetometer
-int temp;		// Raw Temperature sensor value
-float tempInC;	// Temperature data in Celsius
-float tempInF;	// Temperature data in Fahrenheit
+int accel[3];			// Accelerometer
+int gyro[3];			// Gyroscope
+int mag[3];				// Magnetometer
+float magAdjVals[3];	// Magnetometer sensitivity adjustment values
+const float axisMultiplier[] = {
+	1.0, 1.0, 1.0
+};
+const int axisShift[] = {
+	0, -34, -36
+};
+int temp;				// Raw Temperature sensor value
+float tempInC;			// Temperature data in Celsius
+float tempInF;			// Temperature data in Fahrenheit
 
 boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerometer. Returns false if initialization fails
 	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	// PWR_MGMT_1 send 128, reset device
@@ -15,6 +22,7 @@ boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerom
 	if(readByte(MPU_ADDR, WHO_AM_I) != 104)			return false;
 	else if(readByte(MAG_ADDR, MAG_WHO_AM_I) != 72)	return false;
 	else if(!magSelfTest())							return false;
+	setMagAdjValues();
 	return true;
 }
 
@@ -55,12 +63,24 @@ boolean magDataReady(){	// Checks if the Magnetometer data is ready
 	return readByte(MAG_ADDR, MAG_STATUS_1) == 1;
 }
 
+void setMagAdjValues(){
+	short rawVals[3];
+	writeByte(MAG_ADDR, MAG_CONTROL, 15);				// Sets the Magnetometer to Fuse ROM mode;
+	rawVals[0] = readByte(MAG_ADDR, MAG_SENS_ADJ_X);	// Reads X-axis sensitivity adjustment value of the Magnetometer
+	rawVals[1] = readByte(MAG_ADDR, MAG_SENS_ADJ_Y);	// Reads Y-axis sensitivity adjustment value of the Magnetometer
+	rawVals[2] = readByte(MAG_ADDR, MAG_SENS_ADJ_Z);	// Reads Z-axis sensitivity adjustment value of the Magnetometer
+	writeByte(MAG_ADDR, MAG_CONTROL, 0);				// Shuts the Magnetometer off;
+	for(int i = 0; i < 3; i++){
+		magAdjVals[i] = (((rawVals[i] - 128) / 256.0) + 1) * axisMultiplier[i];	// Calculates the multiplier to adjust the Magnetometer data with
+	}
+}
+
 void printSensorForProcessing(){	// Prints sensor info for use with a processing sketch I have made
-	Serial.print(accel[0]);
+	Serial.print(mag[0]);
 	Serial.print(",");
-	Serial.print(accel[1]);
+	Serial.print(mag[1]);
 	Serial.print(",");
-	Serial.print(accel[2]);
+	Serial.print(mag[2]);
 	Serial.print("n");
 }
 
@@ -101,9 +121,9 @@ void updateSensors(){	// Takes readings from the sensors
 	gyro[2] = readSensor(MPU_ADDR, GYRO_ZOUT_L, GYRO_ZOUT_H);		// Reads Z-axis of Gyroscope
 	for(int i = 0; i < 100; i++){	// Waits up to 10 ms for the Magnetometer data to become available should take 0.3 ms
 		if(magDataReady()){
-			mag[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);	// Reads X-axis of Magnetometer
-			mag[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);	// Reads Y-axis of Magnetometer
-			mag[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);	// Reads Z-axis of Magnetometer
+			mag[0] = (int) readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H) * magAdjVals[0] + axisShift[0];	// Reads X-axis of Magnetometer
+			mag[1] = (int) readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H) * magAdjVals[1] + axisShift[1];	// Reads Y-axis of Magnetometer
+			mag[2] = (int) readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H) * magAdjVals[2] + axisShift[2];	// Reads Z-axis of Magnetometer
 			break;
 		}
 		delayMicroseconds(100);

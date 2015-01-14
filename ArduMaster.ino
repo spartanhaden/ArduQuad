@@ -18,7 +18,7 @@
 #define MAG_STATUS_2	0x09	// Val of 1 = error, 0 = normal, magnetic sensor overflow bit 3 and data read error bit 2
 #define MAG_CONTROL		0x0A	// Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
 #define MAG_SELF_TEST	0x0C	// Write 1 to enable self test on bit 6
-#define MAG_SENS_ADJ_X	0x01	// Fuse ROM X-axis sensitivity adjustment value
+#define MAG_SENS_ADJ_X	0x10	// Fuse ROM X-axis sensitivity adjustment value
 #define MAG_SENS_ADJ_Y	0x11	// Fuse ROM Y-axis sensitivity adjustment value
 #define MAG_SENS_ADJ_Z	0x12	// Fuse ROM Z-axis sensitivity adjustment value
 
