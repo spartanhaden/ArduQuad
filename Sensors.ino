@@ -28,26 +28,26 @@ void sensorLoop(){
 boolean magSelfTest(){
 	int magSelfTest[3];
 	boolean testPassed = true;
-	writeByte(MAG_ADDR, MAG_CONTROL, 0);	//Set Power-down mode
-	writeByte(MAG_ADDR, MAG_SELF_TEST, 64);	//Write “1” to SELF bit of self-test register
-	writeByte(MAG_ADDR, MAG_CONTROL, 8);	//Set Self-test Mode
-	for(int i = 0; i < 100; i++){			//Waits 10 ms for the Magnetometer data to become available
+	writeByte(MAG_ADDR, MAG_CONTROL, 0);	// Set Power-down mode
+	writeByte(MAG_ADDR, MAG_SELF_TEST, 64);	// Write “1” to SELF bit of self-test register
+	writeByte(MAG_ADDR, MAG_CONTROL, 8);	// Set Self-test Mode
+	for(int i = 0; i < 100; i++){			// Waits up to 10 ms for the Magnetometer data to become available should take 0.3 ms
 		if(magDataReady()){
 			break;
 		}
 		delayMicroseconds(100);
 	}
 	if(!magDataReady()){
-		testPassed = false;	//Check Data Ready
+		testPassed = false;	// Check Data Ready
 		}else{
-		magSelfTest[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);				//Get X self-test value
-		magSelfTest[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);				//Get Y self-test value
-		magSelfTest[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);				//Get Z self-test value
-		if(magSelfTest[0] < -100 || magSelfTest[0] > 100) testPassed = false;		//Test X self-test value
-		else if(magSelfTest[1] < -100 || magSelfTest[1] > 100) testPassed = false;	//Test Y self-test value
-		else if(magSelfTest[2] < -1000 || magSelfTest[2] > -300)testPassed = false;	//Test Z self-test value
+		magSelfTest[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);				// Get X-axis self-test value
+		magSelfTest[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);				// Get Y-axis self-test value
+		magSelfTest[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);				// Get Z-axis self-test value
+		if(magSelfTest[0] < -100 || magSelfTest[0] > 100) testPassed = false;		// Test X-axis self-test value
+		else if(magSelfTest[1] < -100 || magSelfTest[1] > 100) testPassed = false;	// Test Y-axis self-test value
+		else if(magSelfTest[2] < -1000 || magSelfTest[2] > -300)testPassed = false;	// Test Z-axis self-test value
 	}
-	writeByte(MAG_ADDR, MAG_SELF_TEST, 0);	//Write “0” to SELF bit of self-test register
+	writeByte(MAG_ADDR, MAG_SELF_TEST, 0);	// Write “0” to SELF bit of self-test register
 	return testPassed;
 }
 
@@ -92,23 +92,23 @@ void printSensorValues(){	// Prints human readable sensor information
 }
 
 void updateSensors(){	// Takes readings from the sensors
-	writeByte(MAG_ADDR, MAG_CONTROL, 1);
-	accel[0] = readSensor(MPU_ADDR, ACCEL_XOUT_L, ACCEL_XOUT_H);
-	accel[1] = readSensor(MPU_ADDR, ACCEL_YOUT_L, ACCEL_YOUT_H);
-	accel[2] = readSensor(MPU_ADDR, ACCEL_ZOUT_L, ACCEL_ZOUT_H);
-	gyro[0] = readSensor(MPU_ADDR, GYRO_XOUT_L, GYRO_XOUT_H);
-	gyro[1] = readSensor(MPU_ADDR, GYRO_YOUT_L, GYRO_YOUT_H);
-	gyro[2] = readSensor(MPU_ADDR, GYRO_ZOUT_L, GYRO_ZOUT_H);
+	writeByte(MAG_ADDR, MAG_CONTROL, 1);	// Sets the Magnetometer to single measurement mode
+	accel[0] = readSensor(MPU_ADDR, ACCEL_XOUT_L, ACCEL_XOUT_H);	// Reads X-axis of Accelerometer
+	accel[1] = readSensor(MPU_ADDR, ACCEL_YOUT_L, ACCEL_YOUT_H);	// Reads Y-axis of Accelerometer
+	accel[2] = readSensor(MPU_ADDR, ACCEL_ZOUT_L, ACCEL_ZOUT_H);	// Reads Z-axis of Accelerometer
+	gyro[0] = readSensor(MPU_ADDR, GYRO_XOUT_L, GYRO_XOUT_H);		// Reads X-axis of Gyroscope
+	gyro[1] = readSensor(MPU_ADDR, GYRO_YOUT_L, GYRO_YOUT_H);		// Reads Y-axis of Gyroscope
+	gyro[2] = readSensor(MPU_ADDR, GYRO_ZOUT_L, GYRO_ZOUT_H);		// Reads Z-axis of Gyroscope
 	for(int i = 0; i < 100; i++){	// Waits up to 10 ms for the Magnetometer data to become available should take 0.3 ms
 		if(magDataReady()){
-			mag[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);
-			mag[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);
-			mag[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);
+			mag[0] = readSensor(MAG_ADDR, MAG_XOUT_L, MAG_XOUT_H);	// Reads X-axis of Magnetometer
+			mag[1] = readSensor(MAG_ADDR, MAG_YOUT_L, MAG_YOUT_H);	// Reads Y-axis of Magnetometer
+			mag[2] = readSensor(MAG_ADDR, MAG_ZOUT_L, MAG_ZOUT_H);	// Reads Z-axis of Magnetometer
 			break;
 		}
 		delayMicroseconds(100);
 	}
-	temp = readSensor(MPU_ADDR, TEMP_OUT_L, TEMP_OUT_H);
+	temp = readSensor(MPU_ADDR, TEMP_OUT_L, TEMP_OUT_H);	// Reads temperature data
 	tempInC = (((float)temp)/340 + 35);
 	tempInF = tempInC * 1.8 + 32;
 }
