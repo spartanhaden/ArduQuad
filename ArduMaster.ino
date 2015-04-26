@@ -1,9 +1,20 @@
-#include "Servo.h"
+//#include "Servo.h"
 #include "utility/twi.h"
 #include "Wire.h"
+#include "Servo.h"
+
+#define MAX_SIGNAL 2000
+#define MIN_SIGNAL 700
+
+#define PI		 3.14159265359
 
 #define MPU_ADDR		104
 #define MAG_ADDR		12
+
+#define RIGHT_MOTOR_PIN	2
+#define FRONT_MOTOR_PIN	3
+#define LEFT_MOTOR_PIN	7
+#define BACK_MOTOR_PIN	8
 
 // Define MAG Registers
 #define MAG_WHO_AM_I	0x00	// Returns 0x48
@@ -45,6 +56,7 @@
 #define GYRO_YOUT_L		70
 #define GYRO_ZOUT_H		71
 #define GYRO_ZOUT_L		72
+float accelInG[3];
 
 void setup(){
 	Wire.begin();
@@ -53,12 +65,12 @@ void setup(){
 		delay(500);
 		Serial.println("Error initializing the sensors.");
 	}
-	//initMotors();
+	initMotors();
 }
 
 void loop(){
 	sensorLoop();
-	//MotorLoop();
+	MotorLoop();
 }
 
 byte readByte(int DEV_ADDR, byte REG){
