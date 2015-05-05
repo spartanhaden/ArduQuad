@@ -3,10 +3,10 @@
 #include "Wire.h"
 #include "Servo.h"
 
-#define MAX_SIGNAL 2000
-#define MIN_SIGNAL 700
+#define MAX_SIGNAL		2000
+#define MIN_SIGNAL		700
 
-#define PI		 3.14159265359
+#define PI				3.14159265359
 
 #define MPU_ADDR		104
 #define MAG_ADDR		12
@@ -60,17 +60,17 @@ float accelInG[3];
 
 void setup(){
 	Wire.begin();
-	Serial.begin(9600);
+	Serial1.begin(9600);
 	while(!initSensors()){
 		delay(500);
 		Serial.println("Error initializing the sensors.");
 	}
-	initMotors();
+	//initMotors();
 }
 
 void loop(){
 	sensorLoop();
-	MotorLoop();
+	//MotorLoop();
 }
 
 byte readByte(int DEV_ADDR, byte REG){

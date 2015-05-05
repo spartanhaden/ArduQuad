@@ -27,13 +27,14 @@ boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerom
 }
 
 void sensorLoop(){
+	delay(100);
 	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	// Checks for disconnection of Sensor
 	//updateSensors();
 	readAccel();
 	readGyro();
 	calculateAngles();
 	//printSensorForAndroid();
-	//printSensorValues();
+	printSensorValues();
 	//printSensorForProcessing();
 }
 
@@ -90,45 +91,45 @@ void setMagAdjValues(){
 }
 
 /*void printSensorForProcessing(){	// Prints sensor info for use with a processing sketch I have made
-	Serial.print(Rx);
-	Serial.print(",");
-	Serial.print(Ry);
-	Serial.print(",");
-	Serial.print(Rz);
-	Serial.print("n");
+	Serial1.print(Rx);
+	Serial1.print(",");
+	Serial1.print(Ry);
+	Serial1.print(",");
+	Serial1.print(Rz);
+	Serial1.print("n");
 }*/
 
 void printSensorForAndroid(){	// Prints sensor info for use with an Android app I have made
-	Serial.write(0x02);
-	Serial.write(0x01);
-	Serial.write(0x05);
+	Serial1.write(0x02);
+	Serial1.write(0x01);
+	Serial1.write(0x05);
 }
 
 void printSensorValues(){	// Prints human readable sensor information
-	Serial.print("Accelerometer X: ");
-	Serial.print(float(accel[0])/16384);
-	Serial.print("\tY: ");
-	Serial.print(float(accel[1])/16384);
-	Serial.print("\tZ: ");
-	Serial.println(float(accel[2])/16384);
-	Serial.print("Gyroscope X: ");
-	Serial.print(gyro[0]);
-	Serial.print("\tY: ");
-	Serial.print(gyro[1]);
-	Serial.print("\tZ: ");
-	Serial.println(gyro[2]);
-	Serial.print("Magnetometer X: ");
-	Serial.print(mag[0]);
-	Serial.print("\tY: ");
-	Serial.print(mag[1]);
-	Serial.print("\tZ: ");
-	Serial.println(mag[2]);
-	Serial.print("Temperature: ");
-	Serial.print(tempInC);
-	Serial.print(" C\t");
-	Serial.print(tempInF);
-	Serial.println(" F");
-	Serial.println();
+	Serial1.print("Accelerometer X: ");
+	Serial1.print(float(accel[0])/16384);
+	Serial1.print("\tY: ");
+	Serial1.print(float(accel[1])/16384);
+	Serial1.print("\tZ: ");
+	Serial1.println(float(accel[2])/16384);
+	Serial1.print("Gyroscope X: ");
+	Serial1.print(gyro[0]);
+	Serial1.print("\tY: ");
+	Serial1.print(gyro[1]);
+	Serial1.print("\tZ: ");
+	Serial1.println(gyro[2]);
+	Serial1.print("Magnetometer X: ");
+	Serial1.print(mag[0]);
+	Serial1.print("\tY: ");
+	Serial1.print(mag[1]);
+	Serial1.print("\tZ: ");
+	Serial1.println(mag[2]);
+	Serial1.print("Temperature: ");
+	Serial1.print(tempInC);
+	Serial1.print(" C\t");
+	Serial1.print(tempInF);
+	Serial1.println(" F");
+	Serial1.println();
 }
 
 void readAccel(){
