@@ -3,59 +3,8 @@
 #include "Wire.h"
 #include "Servo.h"
 
-#define MAX_SIGNAL		2000
-#define MIN_SIGNAL		700
+#define PI	3.14159265359
 
-#define PI				3.14159265359
-
-#define MPU_ADDR		104
-#define MAG_ADDR		12
-
-#define RIGHT_MOTOR_PIN	2
-#define FRONT_MOTOR_PIN	3
-#define LEFT_MOTOR_PIN	7
-#define BACK_MOTOR_PIN	8
-
-// Define MAG Registers
-#define MAG_WHO_AM_I	0x00	// Returns 0x48
-#define MAG_INFO		0x01	// Does Nothing?
-#define MAG_STATUS_1	0x02	// Val of 1 = ready, 0 = normal, Data ready status bit 0
-#define MAG_XOUT_L		0x03
-#define MAG_XOUT_H		0x04
-#define MAG_YOUT_L		0x05
-#define MAG_YOUT_H		0x06
-#define MAG_ZOUT_L		0x07
-#define MAG_ZOUT_H		0x08
-#define MAG_STATUS_2	0x09	// Val of 1 = error, 0 = normal, magnetic sensor overflow bit 3 and data read error bit 2
-#define MAG_CONTROL		0x0A	// Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
-#define MAG_SELF_TEST	0x0C	// Write 1 to enable self test on bit 6
-#define MAG_SENS_ADJ_X	0x10	// Fuse ROM X-axis sensitivity adjustment value
-#define MAG_SENS_ADJ_Y	0x11	// Fuse ROM Y-axis sensitivity adjustment value
-#define MAG_SENS_ADJ_Z	0x12	// Fuse ROM Z-axis sensitivity adjustment value
-
-// Define Registers
-#define INT_PIN_CFG		55
-#define USER_CTRL		106
-#define PWR_MGMT_1		107
-#define PWR_MGMT_2		108
-#define WHO_AM_I		117
-// Define ACCEL Registers
-#define ACCEL_XOUT_H	59
-#define ACCEL_XOUT_L	60
-#define ACCEL_YOUT_H	61
-#define ACCEL_YOUT_L	62
-#define ACCEL_ZOUT_H	63
-#define ACCEL_ZOUT_L	64
-// Define TEMP Registers
-#define TEMP_OUT_H		65
-#define TEMP_OUT_L		66
-// Define GYRO Registers
-#define GYRO_XOUT_H		67
-#define GYRO_XOUT_L		68
-#define GYRO_YOUT_H		69
-#define GYRO_YOUT_L		70
-#define GYRO_ZOUT_H		71
-#define GYRO_ZOUT_L		72
 float accelInG[3];
 
 void setup(){

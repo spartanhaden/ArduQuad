@@ -9,6 +9,17 @@
 // 7 - 3
 // 8 - 2
 
+// The motor pins with an associated direction
+const int RIGHT_MOTOR_PIN	= 2;
+const int FRONT_MOTOR_PIN	= 3;
+const int LEFT_MOTOR_PIN	= 7;
+const int BACK_MOTOR_PIN	= 8;
+
+// Max and Min signal for the ESCs
+const int MAX_SIGNAL		= 2000;
+const int MIN_SIGNAL		= 700;
+
+// The servos that will be used to manipulate the ESCs
 Servo RIGHT_MOTOR;
 Servo FRONT_MOTOR;
 Servo LEFT_MOTOR;

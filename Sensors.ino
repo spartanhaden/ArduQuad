@@ -1,3 +1,50 @@
+
+// Define the address of the MPU and it's internal Magnetometer
+const int MPU_ADDR		= 104;
+const int MAG_ADDR		= 12;
+
+// Define MAG Registers
+const byte MAG_WHO_AM_I		= 0x00;	// Should return 0x48
+const byte MAG_INFO			= 0x01;	// Does Nothing?
+const byte MAG_STATUS_1		= 0x02;	// Val of 1 = ready, 0 = normal, Data ready status bit 0
+const byte MAG_XOUT_L		= 0x03;
+const byte MAG_XOUT_H		= 0x04;
+const byte MAG_YOUT_L		= 0x05;
+const byte MAG_YOUT_H		= 0x06;
+const byte MAG_ZOUT_L		= 0x07;
+const byte MAG_ZOUT_H		= 0x08;
+const byte MAG_STATUS_2		= 0x09;	// Val of 1 = error, 0 = normal, magnetic sensor overflow bit 3 and data read error bit 2
+const byte MAG_CONTROL		= 0x0A;	// Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
+const byte MAG_SELF_TEST	= 0x0C;	// Write 1 to enable self test on bit 6
+const byte MAG_SENS_ADJ_X	= 0x10;	// Fuse ROM X-axis sensitivity adjustment value
+const byte MAG_SENS_ADJ_Y	= 0x11;	// Fuse ROM Y-axis sensitivity adjustment value
+const byte MAG_SENS_ADJ_Z	= 0x12;	// Fuse ROM Z-axis sensitivity adjustment value
+
+// Define General Registers
+const int INT_PIN_CFG	= 55;
+const int USER_CTRL		= 106;
+const int PWR_MGMT_1	= 107;
+const int PWR_MGMT_2	= 108;
+const int WHO_AM_I		= 117;
+// Define ACCEL Registers
+const int ACCEL_XOUT_H	= 59;
+const int ACCEL_XOUT_L	= 60;
+const int ACCEL_YOUT_H	= 61;
+const int ACCEL_YOUT_L	= 62;
+const int ACCEL_ZOUT_H	= 63;
+const int ACCEL_ZOUT_L	= 64;
+// Define TEMP Registers
+const int TEMP_OUT_H	= 65;
+const int TEMP_OUT_L	= 66;
+// Define GYRO Registers
+const int GYRO_XOUT_H	= 67;
+const int GYRO_XOUT_L	= 68;
+const int GYRO_YOUT_H	= 69;
+const int GYRO_YOUT_L	= 70;
+const int GYRO_ZOUT_H	= 71;
+const int GYRO_ZOUT_L	= 72;
+
+
 int accel[3];			// Accelerometer
 int gyro[3];			// Gyroscope
 int mag[3];				// Magnetometer
