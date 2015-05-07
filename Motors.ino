@@ -25,7 +25,7 @@ Servo FRONT_MOTOR;
 Servo LEFT_MOTOR;
 Servo BACK_MOTOR;
 
-void initMotors(){
+void initMotors(){	// Initializes the motors
 	RIGHT_MOTOR.attach(RIGHT_MOTOR_PIN);
 	FRONT_MOTOR.attach(FRONT_MOTOR_PIN);
 	LEFT_MOTOR.attach(LEFT_MOTOR_PIN);
@@ -34,7 +34,7 @@ void initMotors(){
 	delay(10000);
 }
 
-void MotorLoop(){
+void MotorLoop(){	// Updates the motor output values
 	angle();
 	//setAllMotors(1200);
 	//delay(500);
@@ -42,14 +42,14 @@ void MotorLoop(){
 	//delay(5000);
 }
 
-void angle(){
+void angle(){	// Simple stabilization test
 	RIGHT_MOTOR.writeMicroseconds(MIN_SIGNAL + max(25 * accelInG[0], 0));
 	LEFT_MOTOR.writeMicroseconds(MIN_SIGNAL + max(25 * -accelInG[0], 0));
 	FRONT_MOTOR.writeMicroseconds(MIN_SIGNAL + max(25 * accelInG[1], 0));
 	BACK_MOTOR.writeMicroseconds(MIN_SIGNAL + max(25 * -accelInG[1], 0));
 }
 
-void setAllMotors(int speed){
+void setAllMotors(int speed){	// Sets all of the motors to the speed passed in
 	RIGHT_MOTOR.writeMicroseconds(speed);
 	FRONT_MOTOR.writeMicroseconds(speed);
 	LEFT_MOTOR.writeMicroseconds(speed);

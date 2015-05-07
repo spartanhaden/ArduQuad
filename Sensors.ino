@@ -61,15 +61,15 @@ float tempInF;			// Temperature data in Fahrenheit
 
 boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerometer. Returns false if initialization fails
 	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	// PWR_MGMT_1 send 128, reset device
-	delay(100);
+	delay(100);								// Wait for the Gyroscope to stabilize so it can be used for the clock source
 	writeByte(MPU_ADDR, PWR_MGMT_1, 1);		// PWR_MGMT_1 send 1, set clock source to X axis Gyroscope and set sensor active
-	delay(200);
+	delay(200);								// Wait for the device to become active
 	writeByte(MPU_ADDR, INT_PIN_CFG, 2);	// Enable I2C pass through
-	delay(5);
-	if(readByte(MPU_ADDR, WHO_AM_I) != 104)			return false;
-	else if(readByte(MAG_ADDR, MAG_WHO_AM_I) != 72)	return false;
-	else if(!magSelfTest())							return false;
-	setMagAdjValues();
+	delay(5);								// Wait for the pass through to be enabled
+	if(readByte(MPU_ADDR, WHO_AM_I) != 104)			return false;	// Return false if the MPU is unreachable
+	else if(readByte(MAG_ADDR, MAG_WHO_AM_I) != 72)	return false;	// Return false if the Magnetometer is unreachable
+	else if(!magSelfTest())							return false;	// Return false if the Magnetometer self test fails
+	setMagAdjValues();	// Reads the factory calibration values from the Magnetometer
 	return true;
 }
 
