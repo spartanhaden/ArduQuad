@@ -1,15 +1,13 @@
-//#include "Servo.h"
 #include "utility/twi.h"
 #include "Wire.h"
 #include "Servo.h"
 
-#define PI	3.14159265359
-
+float pose[3];
 float accelInG[3];
 
 void setup(){
 	Wire.begin();
-	Serial1.begin(9600);
+	Serial.begin(9600);
 	while(!initSensors()){
 		delay(500);
 		Serial.println("Error initializing the sensors.");

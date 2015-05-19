@@ -44,7 +44,6 @@ const int GYRO_YOUT_L	= 70;
 const int GYRO_ZOUT_H	= 71;
 const int GYRO_ZOUT_L	= 72;
 
-
 int accel[3];			// Accelerometer
 int gyro[3];			// Gyroscope
 int mag[3];				// Magnetometer
@@ -80,7 +79,8 @@ void sensorLoop(){
 	readAccel();
 	readGyro();
 	calculateAngles();
-	printSensorValues();
+	sendPacket();
+	//printSensorValues();
 }
 
 void calculateAngles(){	// Calculates the angle from accelerometer data
@@ -88,9 +88,12 @@ void calculateAngles(){	// Calculates the angle from accelerometer data
 	accelInG[1] = accel[1] / 16384.0;
 	accelInG[2] = accel[2] / 16384.0;
 	float R = sqrt(pow(accelInG[0], 2) + pow(accelInG[1], 2) + pow(accelInG[2], 2));	// Normalizes the data so the total force = 1G
-	accelInG[0] = asin(accelInG[0] / R) * (180.0 / PI);
-	accelInG[1] = asin(accelInG[1] / R) * (180.0 / PI);
-	accelInG[2] = asin(accelInG[2] / R) * (180.0 / PI);
+	accelInG[0] = accelInG[0] / R;
+	accelInG[1] = accelInG[1] / R;
+	accelInG[2] = accelInG[2] / R;
+	pose[0] = atan2(accelInG[2], accelInG[1]) * 180 / M_PI;
+	pose[1] = atan2(accelInG[2], accelInG[0]) * 180 / M_PI;
+	pose[2] = atan2(accelInG[1], accelInG[2]) * 180 / M_PI;
 }
 
 boolean magSelfTest(){	// Performs a self test on the Magnetometer, returns FALSE if the test fails
@@ -136,30 +139,30 @@ void setMagAdjValues(){	// Reads the factory calibration values from the Magneto
 }
 
 void printSensorValues(){	// Prints human readable sensor information
-	Serial1.print("Accelerometer X: ");
-	Serial1.print(float(accel[0])/16384);
-	Serial1.print("\tY: ");
-	Serial1.print(float(accel[1])/16384);
-	Serial1.print("\tZ: ");
-	Serial1.println(float(accel[2])/16384);
-	Serial1.print("Gyroscope X: ");
-	Serial1.print(gyro[0]);
-	Serial1.print("\tY: ");
-	Serial1.print(gyro[1]);
-	Serial1.print("\tZ: ");
-	Serial1.println(gyro[2]);
-	Serial1.print("Magnetometer X: ");
-	Serial1.print(mag[0]);
-	Serial1.print("\tY: ");
-	Serial1.print(mag[1]);
-	Serial1.print("\tZ: ");
-	Serial1.println(mag[2]);
-	Serial1.print("Temperature: ");
-	Serial1.print(tempInC);
-	Serial1.print(" C\t");
-	Serial1.print(tempInF);
-	Serial1.println(" F");
-	Serial1.println();
+	Serial.print("Accelerometer X: ");
+	Serial.print(float(accel[0])/16384);
+	Serial.print("\tY: ");
+	Serial.print(float(accel[1])/16384);
+	Serial.print("\tZ: ");
+	Serial.println(float(accel[2])/16384);
+	Serial.print("Gyroscope X: ");
+	Serial.print(gyro[0]);
+	Serial.print("\tY: ");
+	Serial.print(gyro[1]);
+	Serial.print("\tZ: ");
+	Serial.println(gyro[2]);
+	Serial.print("Magnetometer X: ");
+	Serial.print(mag[0]);
+	Serial.print("\tY: ");
+	Serial.print(mag[1]);
+	Serial.print("\tZ: ");
+	Serial.println(mag[2]);
+	Serial.print("Temperature: ");
+	Serial.print(tempInC);
+	Serial.print(" C\t");
+	Serial.print(tempInF);
+	Serial.println(" F");
+	Serial.println();
 }
 
 void readAccel(){	// Takes a reading from the Accelerometer

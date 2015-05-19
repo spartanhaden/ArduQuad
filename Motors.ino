@@ -4,10 +4,10 @@
 // 2 - 43
 // 3 - 12
 // 4 - 13
-// 5 - 8
-// 6 - 7
-// 7 - 3
-// 8 - 2
+// 5 - 8 - BACK_MOTOR_PIN
+// 6 - 7 - LEFT_MOTOR_PIN
+// 7 - 3 - FRONT_MOTOR_PIN
+// 8 - 2 - RIGHT_MOTOR_PIN
 
 // The motor pins with an associated direction
 const int RIGHT_MOTOR_PIN	= 2;
@@ -15,9 +15,9 @@ const int FRONT_MOTOR_PIN	= 3;
 const int LEFT_MOTOR_PIN	= 7;
 const int BACK_MOTOR_PIN	= 8;
 
-// Max and Min signal for the ESCs
-const int MAX_SIGNAL		= 2000;
+// Min and Max signal for the ESCs
 const int MIN_SIGNAL		= 700;
+const int MAX_SIGNAL		= 2000;
 
 // The servos that will be used to manipulate the ESCs
 Servo RIGHT_MOTOR;
@@ -25,7 +25,7 @@ Servo FRONT_MOTOR;
 Servo LEFT_MOTOR;
 Servo BACK_MOTOR;
 
-void initMotors(){	// Initializes the motors
+void initMotors(){	// Initializes the ESCs
 	RIGHT_MOTOR.attach(RIGHT_MOTOR_PIN);
 	FRONT_MOTOR.attach(FRONT_MOTOR_PIN);
 	LEFT_MOTOR.attach(LEFT_MOTOR_PIN);
@@ -35,11 +35,11 @@ void initMotors(){	// Initializes the motors
 }
 
 void MotorLoop(){	// Updates the motor output values
-	angle();
-	//setAllMotors(1200);
-	//delay(500);
-	//setAllMotors(MIN_SIGNAL);
-	//delay(5000);
+	//angle();
+	setAllMotors(1200);
+	delay(500);
+	setAllMotors(MIN_SIGNAL);
+	delay(5000);
 }
 
 void angle(){	// Simple stabilization test
