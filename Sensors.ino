@@ -73,7 +73,7 @@ boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerom
 }
 
 void sensorLoop(){
-	delay(100);
+	//delay(100);
 	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	// Checks for disconnection of Sensor
 	//updateSensors();
 	readAccel();

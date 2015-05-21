@@ -4,20 +4,32 @@
 
 float pose[3];
 float accelInG[3];
+boolean heartbeat = false;
+int cycleswoheartbeat = 0;
 
 void setup(){
 	Wire.begin();
-	Serial.begin(9600);
+	Serial1.begin(9600);
 	while(!initSensors()){
 		delay(500);
-		Serial.println("Error initializing the sensors.");
+		Serial1.println("Error initializing the sensors.");
 	}
-	//initMotors();
+	initMotors();
 }
 
 void loop(){
+	if(cycleswoheartbeat > 5){
+		MotorLoop(true);
+		exit();
+	}
 	sensorLoop();
-	//MotorLoop();
+	MotorLoop(false);
+	if(heartbeat){
+		cycleswoheartbeat = 0;
+	}else{
+		cycleswoheartbeat++;
+	}
+	heartbeat = false;
 }
 
 byte readByte(int DEV_ADDR, byte REG){

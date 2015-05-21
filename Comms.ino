@@ -1,14 +1,15 @@
 void serialEvent(){
-	while(Serial.available()){
-	// statement
+	while(Serial1.available()){
+		if(Serial1.read() == 'a'){
+		    heartbeat = true;
+		}
 	}
 }
 
 void sendPacket(){	// Sends a heartbeat to the other device
-	Serial.print(pose[0]);
-	Serial.print(',');
-	Serial.print(pose[1]);
-	Serial.print(',');
-	Serial.print(pose[2]);
-	Serial.print('n');
+	Serial1.print(pose[0]);
+	Serial1.print(',');
+	Serial1.print(pose[1]);
+	Serial1.print(',');
+	Serial1.println(pose[2]);
 }
