@@ -1,9 +1,7 @@
-void serialEvent(){
-	while(Serial1.available()){
-		if(Serial1.read() == 'a'){
-		    heartbeat = true;
-		}
-	}
+void serialEvent1(){
+	while(Serial1.available())
+		if(Serial1.read() == 'a')
+			heartbeat = true;
 }
 
 void sendPacket(){	// Sends a heartbeat to the other device

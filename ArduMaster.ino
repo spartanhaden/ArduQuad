@@ -20,15 +20,14 @@ void setup(){
 void loop(){
 	if(cycleswoheartbeat > 5){
 		MotorLoop(true);
-		exit();
+		exit(0);
 	}
 	sensorLoop();
 	MotorLoop(false);
-	if(heartbeat){
+	if(heartbeat)
 		cycleswoheartbeat = 0;
-	}else{
+	else
 		cycleswoheartbeat++;
-	}
 	heartbeat = false;
 }
 
