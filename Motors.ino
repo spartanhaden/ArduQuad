@@ -43,9 +43,9 @@ void MotorLoop(boolean kill){	// Updates the motor output values
 }
 
 void angle(){	// Simple stabilization test
-	RIGHT_MOTOR.writeMicroseconds(constrain(MIN_SIGNAL + 200 + pose[1] - 90.0, 700, 1000));
+	RIGHT_MOTOR.writeMicroseconds(constrain(MIN_SIGNAL + 100 + pose[1] - 90.0, 700, 900));
 	//FRONT_MOTOR.writeMicroseconds(min(MIN_SIGNAL + max(25 * accelInG[1], 0), 1200));
-	LEFT_MOTOR.writeMicroseconds(constrain(MIN_SIGNAL + 200 + (pose[1] * -1.0) + 90.0, 700, 1000));
+	LEFT_MOTOR.writeMicroseconds(constrain(MIN_SIGNAL + 100 + (pose[1] * -1.0) + 90.0, 700, 900));
 	//BACK_MOTOR.writeMicroseconds(min(MIN_SIGNAL + max(25 * -accelInG[1], 0), 1200));
 }
 

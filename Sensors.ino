@@ -57,6 +57,7 @@ const int axisShift[] = {
 int temp;				// Raw Temperature sensor value
 float tempInC;			// Temperature data in Celsius
 float tempInF;			// Temperature data in Fahrenheit
+float accelInG[3];
 
 boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerometer. Returns false if initialization fails
 	writeByte(MPU_ADDR, PWR_MGMT_1, 128);	// PWR_MGMT_1 send 128, reset device
@@ -138,31 +139,11 @@ void setMagAdjValues(){	// Reads the factory calibration values from the Magneto
 	}
 }
 
-void printSensorValues(){	// Prints human readable sensor information
-	Serial.print("Accelerometer X: ");
-	Serial.print(float(accel[0])/16384);
-	Serial.print("\tY: ");
-	Serial.print(float(accel[1])/16384);
-	Serial.print("\tZ: ");
-	Serial.println(float(accel[2])/16384);
-	Serial.print("Gyroscope X: ");
-	Serial.print(gyro[0]);
-	Serial.print("\tY: ");
-	Serial.print(gyro[1]);
-	Serial.print("\tZ: ");
-	Serial.println(gyro[2]);
-	Serial.print("Magnetometer X: ");
-	Serial.print(mag[0]);
-	Serial.print("\tY: ");
-	Serial.print(mag[1]);
-	Serial.print("\tZ: ");
-	Serial.println(mag[2]);
-	Serial.print("Temperature: ");
-	Serial.print(tempInC);
-	Serial.print(" C\t");
-	Serial.print(tempInF);
-	Serial.println(" F");
-	Serial.println();
+void readSensors(){	// Takes readings from all of the sensors
+	readAccel();	// Accelerometer
+	readGyro();		// Gyroscope
+	readMag();		// Magnetometer
+	readTemp();		// Temperature
 }
 
 void readAccel(){	// Takes a reading from the Accelerometer
@@ -194,13 +175,6 @@ void readTemp(){	// Takes a temperature reading from the temperature sensor
 	temp = readSensor(MPU_ADDR, TEMP_OUT_L, TEMP_OUT_H);	// Reads temperature data
 	tempInC = (((float)temp)/340 + 35);
 	tempInF = tempInC * 1.8 + 32;
-}
-
-void updateSensors(){	// Takes readings from all of the sensors
-	readAccel();	// Accelerometer
-	readGyro();		// Gyroscope
-	readMag();		// Magnetometer
-	readTemp();		// Temperature
 }
 
 int readSensor(byte DEV_ADDR, byte REG_L, byte REG_H){	// Reads a sensors LSB and HSB and returns a combined 16-bit signed int

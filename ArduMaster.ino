@@ -2,10 +2,12 @@
 #include "Wire.h"
 #include "Servo.h"
 
+const boolean MOTORS_ENABLED = false;
+
 float pose[3];
 float accelInG[3];
 boolean heartbeat = false;
-int cycleswoheartbeat = 0;
+int cycleswoheartbeat = -20;
 
 void setup(){
 	Wire.begin();
@@ -14,16 +16,19 @@ void setup(){
 		delay(500);
 		Serial1.println("Error initializing the sensors.");
 	}
-	initMotors();
+	if(MOTORS_ENABLED)
+		initMotors();
 }
 
 void loop(){
-	if(cycleswoheartbeat > 5){
-		MotorLoop(true);
+	if(cycleswoheartbeat > 10){
+		if(MOTORS_ENABLED)
+			MotorLoop(true);
 		exit(0);
 	}
 	sensorLoop();
-	MotorLoop(false);
+	if(MOTORS_ENABLED)
+		MotorLoop(false);
 	if(heartbeat)
 		cycleswoheartbeat = 0;
 	else
