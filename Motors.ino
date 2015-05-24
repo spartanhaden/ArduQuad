@@ -34,12 +34,12 @@ void initMotors(){	// Initializes the ESCs
 	delay(10000);
 }
 
-void MotorLoop(boolean kill){	// Updates the motor output values
-	if(kill){
-	    setAllMotors(MIN_SIGNAL);
-	    return;
-	}
+void MotorLoop(){	// Updates the motor output values
 	angle();
+}
+
+void killMotors(){
+	setAllMotors(MIN_SIGNAL);
 }
 
 void angle(){	// Simple stabilization test

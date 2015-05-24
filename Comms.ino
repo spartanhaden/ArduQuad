@@ -1,13 +1,14 @@
-void serialEvent1(){
-	while(Serial1.available())
-		if(Serial1.read() == 'a')
-			heartbeat = true;
+void serialEvent(){
+	while(Serial.available())
+		if(HEARTBEATS_ENABLED)
+			if(Serial.read() == 'a')
+				cycleswoheartbeat = 0;
 }
 
 void sendPacket(){	// Sends a heartbeat to the other device
-	Serial1.print(pose[0]);
-	Serial1.print(',');
-	Serial1.print(pose[1]);
-	Serial1.print(',');
-	Serial1.println(pose[2]);
+	Serial.print(pose[0]);
+	Serial.print(',');
+	Serial.print(pose[1]);
+	Serial.print(',');
+	Serial.println(pose[2]);
 }
