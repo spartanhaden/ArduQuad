@@ -4,28 +4,28 @@ const int MPU_ADDR	= 104;
 const int MAG_ADDR	= 12;
 
 // Define MAG Registers
-const byte MAG_WHO_AM_I		= 0x00;	// Should return 0x48
-const byte MAG_INFO			= 0x01;	// Does Nothing?
-const byte MAG_STATUS_1		= 0x02;	// Val of 1 = ready, 0 = normal, Data ready status bit 0
-const byte MAG_XOUT_L		= 0x03;
-const byte MAG_XOUT_H		= 0x04;
-const byte MAG_YOUT_L		= 0x05;
-const byte MAG_YOUT_H		= 0x06;
-const byte MAG_ZOUT_L		= 0x07;
-const byte MAG_ZOUT_H		= 0x08;
-const byte MAG_STATUS_2		= 0x09;	// Val of 1 = error, 0 = normal, magnetic sensor overflow bit 3 and data read error bit 2
-const byte MAG_CONTROL		= 0x0A;	// Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
-const byte MAG_SELF_TEST	= 0x0C;	// Write 1 to enable self test on bit 6
-const byte MAG_SENS_ADJ_X	= 0x10;	// Fuse ROM X-axis sensitivity adjustment value
-const byte MAG_SENS_ADJ_Y	= 0x11;	// Fuse ROM Y-axis sensitivity adjustment value
-const byte MAG_SENS_ADJ_Z	= 0x12;	// Fuse ROM Z-axis sensitivity adjustment value
+const byte MAG_WHO_AM_I		= 0;	// Should return 104
+const byte MAG_INFO			= 1;	// Does Nothing?
+const byte MAG_STATUS_1		= 2;	// Val of 1 = ready, 0 = normal, Data ready status bit 0
+const byte MAG_XOUT_L		= 3;
+const byte MAG_XOUT_H		= 4;
+const byte MAG_YOUT_L		= 5;
+const byte MAG_YOUT_H		= 6;
+const byte MAG_ZOUT_L		= 7;
+const byte MAG_ZOUT_H		= 8;
+const byte MAG_STATUS_2		= 9;	// Val of 1 = error, 0 = normal, magnetic sensor overflow bit 3 and data read error bit 2
+const byte MAG_CONTROL		= 10;	// Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
+const byte MAG_SELF_TEST	= 12;	// Write 1 to enable self test on bit 6
+const byte MAG_SENS_ADJ_X	= 16;	// Fuse ROM X-axis sensitivity adjustment value
+const byte MAG_SENS_ADJ_Y	= 17;	// Fuse ROM Y-axis sensitivity adjustment value
+const byte MAG_SENS_ADJ_Z	= 18;	// Fuse ROM Z-axis sensitivity adjustment value
 
 // Define General Registers
-const int INT_PIN_CFG	= 55;
+const int INT_PIN_CFG	= 55;	// Interrupt configuration
 const int USER_CTRL		= 106;
 const int PWR_MGMT_1	= 107;
 const int PWR_MGMT_2	= 108;
-const int WHO_AM_I		= 117;
+const int WHO_AM_I		= 117;	// Should return 72
 // Define ACCEL Registers
 const int ACCEL_XOUT_H	= 59;
 const int ACCEL_XOUT_L	= 60;
@@ -43,6 +43,9 @@ const int GYRO_YOUT_H	= 69;
 const int GYRO_YOUT_L	= 70;
 const int GYRO_ZOUT_H	= 71;
 const int GYRO_ZOUT_L	= 72;
+// Define Sample Rate Registers
+const int SMPLRT_DIV	= 25;	// Sample Rate = Gyro output rate / (1 + SMPLRT_DIV)
+const int CONFIG		= 26;	// EXT_SYNC_SET and DLPF_CFG / Low Pass Filter
 
 int accel[3];			// Accelerometer
 int gyro[3];			// Gyroscope
@@ -69,7 +72,7 @@ boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerom
 	if(readByte(MPU_ADDR, WHO_AM_I) != 104)			return false;	// Return false if the MPU is unreachable
 	else if(readByte(MAG_ADDR, MAG_WHO_AM_I) != 72)	return false;	// Return false if the Magnetometer is unreachable
 	else if(!magSelfTest())							return false;	// Return false if the Magnetometer self test fails
-	setMagAdjValues();	// Reads the factory calibration values from the Magnetometer
+	readMagFUSEROM();	// Reads the factory calibration values from the Magnetometer
 	return true;
 }
 
@@ -127,7 +130,7 @@ boolean magDataReady(){	// Checks if the Magnetometer data is ready
 	return readByte(MAG_ADDR, MAG_STATUS_1) == 1;
 }
 
-void setMagAdjValues(){	// Reads the factory calibration values from the Magnetometer
+void readMagFUSEROM(){	// Reads the factory calibration values from the Magnetometer
 	short rawVals[3];
 	writeByte(MAG_ADDR, MAG_CONTROL, 15);				// Sets the Magnetometer to Fuse ROM mode;
 	rawVals[0] = readByte(MAG_ADDR, MAG_SENS_ADJ_X);	// Reads X-axis sensitivity adjustment value of the Magnetometer

@@ -1,4 +1,4 @@
-void serialEvent(){
+void serialEvent(){	// Responds to a message from the radio
 	while(Serial.available())
 		if(HEARTBEATS_ENABLED)
 			if(Serial.read() == 'a')

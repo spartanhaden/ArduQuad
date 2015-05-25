@@ -33,7 +33,7 @@ void loop(){
 		MotorLoop();
 }
 
-byte readByte(int DEV_ADDR, byte REG){
+byte readByte(int DEV_ADDR, byte REG){	// Reads a byte from the given I2C device and register
 	byte Byte;
 	Wire.beginTransmission(DEV_ADDR);
 	Wire.write(REG);
@@ -44,7 +44,7 @@ byte readByte(int DEV_ADDR, byte REG){
 	return Byte;
 }
 
-void writeByte(byte DEV_ADDR, byte REG, byte VAL){
+void writeByte(byte DEV_ADDR, byte REG, byte VAL){	// Writes a byte to the given I2C device and register 
 	Wire.beginTransmission(DEV_ADDR);
 	Wire.write(REG);
 	Wire.write(VAL);
