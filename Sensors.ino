@@ -1,7 +1,6 @@
-
 // Define the address of the MPU and it's internal Magnetometer
-const int MPU_ADDR	= 104;
-const int MAG_ADDR	= 12;
+const byte MPU_ADDR	= 104;
+const byte MAG_ADDR	= 12;
 
 // Define MAG Registers
 const byte MAG_WHO_AM_I		= 0;	// Should return 104
@@ -21,31 +20,31 @@ const byte MAG_SENS_ADJ_Y	= 17;	// Fuse ROM Y-axis sensitivity adjustment value
 const byte MAG_SENS_ADJ_Z	= 18;	// Fuse ROM Z-axis sensitivity adjustment value
 
 // Define General Registers
-const int INT_PIN_CFG	= 55;	// Interrupt configuration
-const int USER_CTRL		= 106;
-const int PWR_MGMT_1	= 107;
-const int PWR_MGMT_2	= 108;
-const int WHO_AM_I		= 117;	// Should return 72
+const byte SMPLRT_DIV	= 25;	// Sample Rate = Gyro output rate / (1 + SMPLRT_DIV)
+const byte CONFIG		= 26;	// EXT_SYNC_SET and DLPF_CFG / Low Pass Filter
+const byte INT_PIN_CFG	= 55;	// Interrupt configuration
+const byte INT_STATUS	= 58;	// Interrupt Status
+const byte USER_CTRL	= 106;
+const byte PWR_MGMT_1	= 107;
+const byte PWR_MGMT_2	= 108;
+const byte WHO_AM_I		= 117;	// Should return 72
 // Define ACCEL Registers
-const int ACCEL_XOUT_H	= 59;
-const int ACCEL_XOUT_L	= 60;
-const int ACCEL_YOUT_H	= 61;
-const int ACCEL_YOUT_L	= 62;
-const int ACCEL_ZOUT_H	= 63;
-const int ACCEL_ZOUT_L	= 64;
+const byte ACCEL_XOUT_H	= 59;
+const byte ACCEL_XOUT_L	= 60;
+const byte ACCEL_YOUT_H	= 61;
+const byte ACCEL_YOUT_L	= 62;
+const byte ACCEL_ZOUT_H	= 63;
+const byte ACCEL_ZOUT_L	= 64;
 // Define TEMP Registers
-const int TEMP_OUT_H	= 65;
-const int TEMP_OUT_L	= 66;
+const byte TEMP_OUT_H	= 65;
+const byte TEMP_OUT_L	= 66;
 // Define GYRO Registers
-const int GYRO_XOUT_H	= 67;
-const int GYRO_XOUT_L	= 68;
-const int GYRO_YOUT_H	= 69;
-const int GYRO_YOUT_L	= 70;
-const int GYRO_ZOUT_H	= 71;
-const int GYRO_ZOUT_L	= 72;
-// Define Sample Rate Registers
-const int SMPLRT_DIV	= 25;	// Sample Rate = Gyro output rate / (1 + SMPLRT_DIV)
-const int CONFIG		= 26;	// EXT_SYNC_SET and DLPF_CFG / Low Pass Filter
+const byte GYRO_XOUT_H	= 67;
+const byte GYRO_XOUT_L	= 68;
+const byte GYRO_YOUT_H	= 69;
+const byte GYRO_YOUT_L	= 70;
+const byte GYRO_ZOUT_H	= 71;
+const byte GYRO_ZOUT_L	= 72;
 
 int accel[3];			// Accelerometer
 int gyro[3];			// Gyroscope
@@ -69,6 +68,8 @@ boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerom
 	delay(200);								// Wait for the device to become active
 	writeByte(MPU_ADDR, INT_PIN_CFG, 2);	// Enable I2C pass through
 	delay(5);								// Wait for the pass through to be enabled
+	writeByte(MPU_ADDR, SMPLRT_DIV, 4);		// 200 Hz
+	writeByte(MPU_ADDR, CONFIG, 4);			// 21 Hz 8.5ms Accel	20 Hz 8.3 ms Gyro
 	if(readByte(MPU_ADDR, WHO_AM_I) != 104)			return false;	// Return false if the MPU is unreachable
 	else if(readByte(MAG_ADDR, MAG_WHO_AM_I) != 72)	return false;	// Return false if the Magnetometer is unreachable
 	else if(!magSelfTest())							return false;	// Return false if the Magnetometer self test fails
@@ -77,14 +78,18 @@ boolean initSensors(){	// Initializes the Magnetometer, Gyroscope, and Accelerom
 }
 
 void sensorLoop(){
-	//delay(100);
-	if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	// Checks for disconnection of Sensor
+	//if(readByte(MPU_ADDR,PWR_MGMT_1) > 1) initSensors();	// Checks for disconnection of Sensor
 	//updateSensors();
-	readAccel();
+	while(readByte(MPU_ADDR, INT_STATUS) != 1){}
+	//readAccel();
 	readGyro();
-	calculateAngles();
-	sendPacket();
-	//printSensorValues();
+	Serial.print((gyro[0] / 32768.0) * 180.0);
+	Serial.print(", ");
+	Serial.print((gyro[1] / 32768.0) * 180.0);
+	Serial.print(", ");
+	Serial.println((gyro[2] / 32768.0) * 180.0);
+	//calculateAngles();
+	//sendPacket();
 }
 
 void calculateAngles(){	// Calculates the angle from accelerometer data
